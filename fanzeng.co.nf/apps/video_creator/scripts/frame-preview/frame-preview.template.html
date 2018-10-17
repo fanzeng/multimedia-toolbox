@@ -1,8 +1,9 @@
-<div>
+<div>aaaaaaaaaaaa
   <ul class="frames">
-    <li ng-repeat="frame in $ctrl.frames" class="thumbnail">
-      <a href="#/frames/{{frame.id}}" class="thumb">
-        <img ng-src="{{frame.frameURL}}" alt="{{frame.name}}" />
+    <li ng-repeat="frame in $ctrl.frames['array_source_file_names']" class="thumbnail">
+      <a href="{{frame}}" class="thumb">bb
+        <img ng-src="{{frame}}" alt="{{frame}}" />
+
       </a>
     </li>
   </ul>
