@@ -1,0 +1,16 @@
+
+#image_container_horizontal {
+   background-color: #bbb;
+   width: 1000px;
+   height: 600px;
+   margin: auto;
+   border: 3px solid #73AD21;;
+   overflow-x: scroll;
+}
+
+img {
+   float: left;
+   clear: none;
+   margin: 5px;
+}
+
