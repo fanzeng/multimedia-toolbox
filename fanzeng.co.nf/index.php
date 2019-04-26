@@ -9,7 +9,7 @@
 <div class="dockbg">
 	<div class="dock">
 		<h2>This website contains a few useful multimedia tools</h2>
-		<p>Fan Zeng is an experienced programer and professional software engineer. He currently lives in Brisbane.</p>
+		<p>My name is Fan Zeng and I am a software engineer in Brisbane, Australia.</p>
 		<p><a href="mailto:fanzengau@gmail.com">fanzengau@gmail.com</a><br>
 		<a href="https://www.linkedin.com/in/fan-zeng-06692916/">LinkedIn</a>
 		<a href="https://github.com/Fan-Zeng">https://github.com/Fan-Zeng</a>
