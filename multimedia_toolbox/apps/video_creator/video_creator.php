@@ -127,7 +127,7 @@ session_start();
 			foreach($std_out as $out) {
 				echo $out;
 			}
-			echo '<h1>Download the video here (right click, save as): <a href="$user_data_dir/' .  $_SESSION["user_id"] . '/output.mp4"' . '>output.mp4</a></h1><br>';
+			echo '<h1>Download the video here (right click, save as): <a href="' . $user_data_dir . '/' .  $_SESSION["user_id"] . '/output.mp4"' . '>output.mp4</a></h1><br>';
 		} else {
 			echo "Please click Start Over.";
 		}
@@ -171,9 +171,9 @@ session_start();
 <html lang="en" ng-app="framePreviewApp">
 <head>
 	<title>Online Video Creator</title>
-	<link rel="stylesheet" type="text/css" href="../../css/default.css">
-	<script type="text/javascript" src="../../vendors/scripts/jquery.min.js"></script>
-	<script type="text/javascript" src="../../vendors/scripts/angular.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../public_html/css/default.css">
+	<script type="text/javascript" src="../../public_html/vendors/scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="../../public_html/vendors/scripts/angular.min.js"></script>
 	<script type="text/javascript" src="scripts/videoCreator.js"></script>
     <script type="text/javascript" src="scripts/app.module.js"></script>
     <script type="text/javascript" src="scripts/frame-preview/frame-preview.module.js"></script>
