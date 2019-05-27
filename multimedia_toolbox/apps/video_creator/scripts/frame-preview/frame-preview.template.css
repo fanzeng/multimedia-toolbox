@@ -14,3 +14,19 @@ img {
    margin: 5px;
 }
 
+div.item {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width: 120px;
+}
+
+input.number_of_frames {
+    width: 100px;
+}
+
+#update_frame_button {
+    display: block;
+    width: 50px;
+    margin: auto;
+}

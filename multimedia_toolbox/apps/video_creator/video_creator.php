@@ -62,7 +62,7 @@ session_start();
 	    $json_file = "$user_data_dir/" . $_SESSION["user_id"] . "/frames.json";
 
 		$handle = fopen($json_file, 'w') or die('Cannot open file:  '.$json_file);
-		$json_data = json_encode($_SESSION);
+		$json_data = json_encode($_SESSION, JSON_PRETTY_PRINT);
 		echo $json_data;
 		fwrite($handle, $json_data);
 	}
