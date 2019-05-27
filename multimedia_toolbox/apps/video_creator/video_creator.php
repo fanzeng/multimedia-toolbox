@@ -20,7 +20,7 @@ session_start();
 	    $_SESSION["source_image_num"] = 0;
 	    $_SESSION["array_source_file_names"] = array();
 	    $_SESSION["array_number_of_frames"] = array();
-
+  	    $_SESSION["array_frames"] = array();
 	}
 
 	if (isset($_POST["start_over"])) {
@@ -67,6 +67,19 @@ session_start();
 		fwrite($handle, $json_data);
 	}
 
+	class Frame {
+	    public function __construct($order, $source_file_name, $number_of_frames) {
+	        $this->order = $order;
+	        $this->source_file_name = $source_file_name;
+	        $this->number_of_frames = $number_of_frames;
+	        	        echo $this->order . ","  . $this->source_file_name . "," . $this->number_of_frames . ".\n";
+
+	    }
+
+	    public function to_string() {
+	        echo $this->order . ","  . $this->source_file_name . "," . $this->number_of_frames . ".\n";
+	    }
+	}
 
 	function upload_images() {
 		// if ($_POST["start_frame_number"] != 0) {
@@ -89,6 +102,9 @@ session_start();
 				$_SESSION["source_image_num"]++;
 				array_push($_SESSION["array_source_file_names"], $source_file_name);
 				array_push($_SESSION["array_number_of_frames"], $number_of_frames);
+				$order = $_SESSION["source_image_num"];
+				$frame = new Frame($order, $source_file_name, $number_of_frames);
+				array_push($_SESSION["array_frames"], $frame);
 				update_json();
 			}
 

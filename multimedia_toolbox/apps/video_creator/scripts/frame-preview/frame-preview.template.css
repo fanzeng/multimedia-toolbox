@@ -19,6 +19,7 @@ div.item {
     display: inline-block;
     text-align: center;
     width: 120px;
+    border: 20px;
 }
 
 input.number_of_frames {
