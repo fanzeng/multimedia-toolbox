@@ -11,14 +11,16 @@ angular.
       });
 
       this.onclick_update_frames = function() {
-        // console.log(this.frames['array_frames']);
-        $http.post('set_frames_json.php', {"array_frames": self.frames['array_frames']}, {
+
+        var post_data = $.param(self.frames);
+        $http.post('set_frames_json.php', post_data, {
           url: 'set_frames_json.php',
           method: "POST",
-          headers: {'Content-Type': 'application/json'}
-         
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function(response) {
-          console.log(response);
+          console.log(response.data);
+        }, function(response) {
+          // console.log(response.data);
         });
       };
     }
