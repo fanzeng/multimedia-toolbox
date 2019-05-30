@@ -1,9 +1,11 @@
-<?php
+<?php require_once('frame.php');
 session_start();
 // echo session_id();
 	ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);
+	
+
 	$user_data_dir = "../../data/user_data";
 	if(!isset($_SESSION["session_initialised"])) {
 
@@ -17,9 +19,8 @@ session_start();
 		exec("mkdir -p $user_data_dir/" . $uniqid . "/expanded_frames/ 2>&1", $std_out);
 
 	    $_SESSION["session_initialised"] = 0;
-	    $_SESSION["source_image_num"] = 0;
+  	    $_SESSION["source_image_id"] = 0;  // This is the immutable unique id for each uploaded image
 	    $_SESSION["array_source_file_names"] = array();
-	    $_SESSION["array_number_of_frames"] = array();
   	    $_SESSION["array_frames"] = array();
 	}
 
@@ -56,7 +57,6 @@ session_start();
 			echo "No work to do.<br>";
 		}
 	}
-
 	function update_json() {
 		global $user_data_dir;
 	    $json_file = "$user_data_dir/" . $_SESSION["user_id"] . "/frames.json";
@@ -67,19 +67,20 @@ session_start();
 		fwrite($handle, $json_data);
 	}
 
-	class Frame {
-	    public function __construct($order, $source_file_name, $number_of_frames) {
-	        $this->order = $order;
-	        $this->source_file_name = $source_file_name;
-	        $this->number_of_frames = $number_of_frames;
-	        	        echo $this->order . ","  . $this->source_file_name . "," . $this->number_of_frames . ".\n";
+	// 
+    // class Frame {
+    //     public function __construct($order, $source_file_name, $number_of_frames, $selected=false) {
+    //         $this->order = $order;
+    //         $this->source_file_name = $source_file_name;
+    //         $this->number_of_frames = $number_of_frames;
+    //         	        echo $this->order . ","  . $this->source_file_name . "," . $this->number_of_frames . ".\n";
+    //         $this->selected = $selected;
+    //     }
 
-	    }
-
-	    public function to_string() {
-	        echo $this->order . ","  . $this->source_file_name . "," . $this->number_of_frames . ".\n";
-	    }
-	}
+    //     public function to_string() {
+    //         echo $this->order . ","  . $this->source_file_name . "," . $this->number_of_frames . "," . $this->selected . ".\n";
+    //     }
+    // }
 
 	function upload_images() {
 		// if ($_POST["start_frame_number"] != 0) {
@@ -93,19 +94,18 @@ session_start();
 	    	$ext = pathinfo($name, PATHINFO_EXTENSION);
 			check_uploaded_file();
 			$upload_success = True;
-			$source_file_name = "$user_data_dir/" . $_SESSION["user_id"]  . "/source_images/source_image_" . (string)$_SESSION["source_image_num"] . "." . $ext ;
+			$source_file_name = "$user_data_dir/" . $_SESSION["user_id"]  . "/source_images/source_image_" . (string)$_SESSION["source_image_id"] . "." . $ext ;
 			echo $source_file_name;
 			if (move_uploaded_file($temp_name, $source_file_name) != True ) {
 				$upload_sucess = False;
 				echo "Failed to upload the file(s).";
 			} else {
-				$_SESSION["source_image_num"]++;
 				array_push($_SESSION["array_source_file_names"], $source_file_name);
-				array_push($_SESSION["array_number_of_frames"], $number_of_frames);
-				$order = $_SESSION["source_image_num"];
-				$frame = new Frame($order, $source_file_name, $number_of_frames);
+				$order = count($_SESSION["array_frames"]);
+				$frame = new Frame($order, $source_file_name, $number_of_frames, true);
 				array_push($_SESSION["array_frames"], $frame);
 				update_json();
+				$_SESSION["source_image_id"]++;
 			}
 
 		}
@@ -114,12 +114,25 @@ session_start();
 
 	function expand_frames() {
 		$_SESSION["frame_id"] = 0;
-		for ($source_image_num = 0; $source_image_num < $_SESSION["source_image_num"]; $source_image_num++) {
-			for($repeat_num = 0; $repeat_num < $_SESSION["array_number_of_frames"][$source_image_num]; $repeat_num++) {
-				$source_file_name = $_SESSION["array_source_file_names"][$source_image_num];
-			   	$ext = pathinfo($source_file_name, PATHINFO_EXTENSION);
-				$target_file_name = get_target_file_name($ext);
-			exec("cp " . $source_file_name . " " . $target_file_name, $std_out);
+		global $user_data_dir;
+		$target_dir = "$user_data_dir/" . $_SESSION["user_id"] . "/expanded_frames/";
+		if (ctype_alnum(substr($user_data_dir, -1))) {
+			exec("rm $user_data_dir/" . $_SESSION['user_id'] . "/expanded_frames/*.morph.jpg", $std_out);
+		} else {
+			die('$use_data_dir is invalid!');
+		}
+
+		for ($source_image_num = 0; $source_image_num < count($_SESSION["array_frames"]); $source_image_num++) {
+			$frame = $_SESSION["array_frames"][$source_image_num];
+			var_dump($frame);
+			$source_file_name = $frame->source_file_name;
+			$ext = pathinfo($source_file_name, PATHINFO_EXTENSION);
+			if ($ext !== "jpg") {
+				exec("convert " . $source_file_name . " " . pathinfo($source_file_name, PATHINFO_DIRNAME) . "/" . pathinfo($source_file_name, PATHINFO_FILENAME) . ".jpg");
+			}
+			for($repeat_num = 0; $repeat_num < $frame->number_of_frames; $repeat_num++) {
+				$target_file_name = get_target_file_name($target_dir, "jpg");
+				exec("cp " . $source_file_name . " " . $target_file_name, $std_out);
 			}
  		}
 	}
@@ -163,9 +176,7 @@ session_start();
   		return $is_good_image;
 	}
 
-	function get_target_file_name($ext) {
-		global $user_data_dir;
-		$target_dir = "$user_data_dir/" . $_SESSION["user_id"] . "/expanded_frames/";
+	function get_target_file_name($target_dir, $ext) {
 		$frame_id_str = sprintf('%05d', $_SESSION["frame_id"]) ;
 		$target_file_name = $target_dir . $frame_id_str . ".morph." . $ext;
 		$_SESSION["frame_id"] = (int)$_SESSION["frame_id"] + 1;

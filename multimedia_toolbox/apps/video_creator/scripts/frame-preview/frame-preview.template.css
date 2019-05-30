@@ -31,3 +31,21 @@ input.number_of_frames {
     width: 50px;
     margin: auto;
 }
+
+div.item {
+    background-color: gray;
+    width: 120px;
+    height: 120px;
+}
+
+span.gap {
+    background-color: black;
+    width: 10px;
+    height: 120px;
+    display: inline-block;
+
+}
+div.selected {
+  background-color: yellow;
+}
+
