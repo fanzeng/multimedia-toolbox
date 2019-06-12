@@ -210,7 +210,7 @@ session_start();
 </head>
 <body>
 	<br>Disclaimer: Your images will be deleted after use. But keep in mind this is on external web hosting. Please use with discretions. <br><br>
-	Step 1: Upload key frames in order (must be image files with same extension):<br>
+	<h2>Step 1: Upload key frames in order (must be image files with same extension):</h2><br>
 	<form id="upload_files" action="#" method="post" enctype="multipart/form-data">
 	<input type="file" name="files_to_upload[]" multiple="multiple" onmousedown="onBrowseBtnClick()" value="files_to_upload" id="files_to_upload">
 	<label for="files_to_upload">Select image files to upload.</label><br>
@@ -228,7 +228,7 @@ session_start();
 
 	<frame-preview></frame-preview>
 
-	Step 2: Specify video parameters:<br>
+	<h2>Step 2: Specify video parameters:</h2><br>
 	<form action="#" method="post" enctype="multipart/form-data">
 	<label for="video_width">Video width</label><br>
 	<input id="video_width" name="video_width" value="640"><br>

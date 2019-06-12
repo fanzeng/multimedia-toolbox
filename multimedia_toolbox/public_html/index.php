@@ -11,7 +11,7 @@
 		<h2>This website contains a few useful multimedia tools</h2>
 		<p>My name is Fan Zeng and I am a software engineer in Brisbane, Australia.</p>
 		<a href="https://www.linkedin.com/in/fan-zeng-06692916/">LinkedIn</a>
-		<a href="https://github.com/Fan-Zeng">https://github.com/Fan-Zeng</a>
+		<a href="https://github.com/fanzeng">https://github.com/fanzeng</a>
 		</p>
 	</div>
 </div>
@@ -34,7 +34,7 @@
 <div class="column_uneven_8_2_right">
 	<h2></h2>
 	<a href="https://www.linkedin.com/in/fan-zeng-06692916/">LinkedIn</a><br>
-	<a href="https://github.com/Fan-Zeng">https://github.com/Fan-Zeng</a><br>
+	<a href="https://github.com/Fan-Zeng">https://github.com/fanzeng</a><br>
 </div>
 
 </body>

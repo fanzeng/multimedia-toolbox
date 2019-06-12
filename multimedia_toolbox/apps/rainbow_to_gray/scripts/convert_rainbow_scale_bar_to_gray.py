@@ -9,29 +9,37 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--in_image_file', help='path to input image file', required=True)
 	parser.add_argument('--out_path', help='output path', required=True)
-	parser.add_argument('--bar_middle', help='vertical position of the scale bar', required=True)
-	parser.add_argument('--bar_left', help='position of the leftmost pixel of the scale bar', required=True)
-	parser.add_argument('--bar_right', help='position of the leftmost pixel of the scale bar', required=True)
+	parser.add_argument('--rainbow_position', help='position of the scale bar', required=True)
+	parser.add_argument('--dark_end', help='position of the leftmost pixel of the scale bar', required=True)
+	parser.add_argument('--bright_end', help='position of the leftmost pixel of the scale bar', required=True)
+	parser.add_argument('-is_vertical', help='whether the rainbow color bar is vertical', action='store_true')
 
 	args = parser.parse_args()
 	in_image_file = args.in_image_file
 	out_path = args.out_path
-	bar_left = int(args.bar_left)
-	bar_right = int(args.bar_right)
-	bar_middle = int(args.bar_middle)
-
+	dark_end = int(args.dark_end)
+	bright_end = int(args.bright_end)
+	rainbow_position = int(args.rainbow_position)
+	
+	is_vertical = False
+	if args.is_vertical:
+		is_vertical = True
 
 	original = plt.imread(in_image_file)
 	converted = np.ndarray(original.shape[:2])
 
-	hsv = matplotlib.colors.rgb_to_hsv(original)
+	hsv = matplotlib.colors.rgb_to_hsv(original[:,:,:3])
 	hsv = (hsv*255).astype(int)
 
 	gray_value = 0 
-	gray_value_increment = 255.0 / (bar_right - bar_left + 1)
+	gray_value_increment = 255.0 / (bright_end - dark_end + 1)
 	d_colour_to_gray = {}
-	for colour_position in range(bar_left, bar_right):
-		colour = hsv[bar_middle, colour_position]
+
+	for colour_position in range(dark_end, bright_end):
+		if is_vertical:
+			colour = hsv[colour_position, rainbow_position]
+		else:
+			colour = hsv[rainbow_position, colour_position]
 		# print colour
 		if sum(colour) == 0:
 			continue
