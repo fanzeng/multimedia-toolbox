@@ -1,10 +1,13 @@
 <?php require_once('frame.php');
-session_start();
-// echo session_id();
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
-	
+	session_start();
+	$document_root = $_SERVER['DOCUMENT_ROOT'];
+	if ($document_root === "/var/www/html/multimedia_toolbox/") { // If this is on local machine.
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+		$_SESSION["local_machine"] = True;
+		$local_machine = True;
+	}	
 
 	$user_data_dir = "../../data/user_data";
 	if(!isset($_SESSION["session_initialised"])) {

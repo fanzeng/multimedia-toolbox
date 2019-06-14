@@ -1,8 +1,13 @@
 <?php
 	session_start();
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
+	$document_root = $_SERVER['DOCUMENT_ROOT'];
+	if ($document_root === "/var/www/html/multimedia_toolbox/") { // If this is on local machine.
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+		$_SESSION["local_machine"] = True;
+		$local_machine = True;
+	}
 
 	function complete_session_destroy() {
 		unset($_SESSION["session_initialised"]);
@@ -57,10 +62,11 @@
 
 	function convert_rainbow_to_gray() {
 		global $user_data_dir;
-		$cmd_str = "python";
-		$document_root = $_SERVER['DOCUMENT_ROOT'];
-		if ($document_root == "/var/www/html/multimedia_toolbox/") { // If this is on local machine.
+		$local_machine = (isset($_SESSION["local_machine"]) && $_SESSION["local_machine"] === True);
+		if ($local_machine) { // If this is on local machine.
 			$cmd_str = "/home/fzeng/.virtualenvs/cv/bin/python";
+		} else {
+			$cmd_str = "python";
 		}
 		$cmd_str .= " scripts/convert_rainbow_scale_bar_to_gray.py";
 		$cmd_str .= " --in_image_file " . $_SESSION["original_file_name"];
@@ -71,11 +77,17 @@
 		if (isset($_POST["is_vertical"])) {
 			$cmd_str .= " -is_vertical";
 		}
+		if (isset($_POST["is_full_sat"])) {
+			$cmd_str .= " -is_full_sat";
+		}
 
-		echo $cmd_str;
-		echo exec($cmd_str . " 2>&1", $std_out);
-		foreach($std_out as $out) {
-			echo $out . "\n";
+		exec($cmd_str . " 2>&1", $std_out);
+
+		if ($local_machine) {
+			echo $cmd_str . "\n";
+			foreach($std_out as $out) {
+				echo $out . "\n";
+			}
 		}
 
 		$_SESSION["converted_file_name"] = $user_data_dir . '/' .  $_SESSION["user_id"] . "/converted.png";
@@ -113,6 +125,8 @@
 		<label for="rainbow_position">Specify the position of the rainbow color bar.</label><br>
 		<input type="checkbox" value="My color bar is vertical" name="is_vertical">
 		<label for="is_vertical">Check if the rainbow color bar is vertical.</label><br>
+		<input type="checkbox" value="My figure has full saturation" name="is_full_sat">
+		<label for="is_full_sat">Check if figure color has full saturation but color bar doesn't.</label><br>
 		<input type="submit" value="Convert" name="convert" <?php echo isset($_SESSION["original_file_name"])?'':'disabled'?>>
 		<p>Message: <span id="specify_rainbow_ends_message"></span></p>
 		<?php

@@ -39,7 +39,7 @@
 
 <?php
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
-	$log_message_php = "$document_root" . '/utils/log_message.php';
+	$log_message_php = "$document_root" . '/apps/utils/log_message.php';
  	include "$log_message_php";
     $path = "$document_root" . "/log/";
 	$postfix = basename(__FILE__) . '.SERVER';
