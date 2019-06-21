@@ -99,8 +99,8 @@
 <head>
 	<title>Rainbow to Gray Image Converter</title>
 	<link rel="stylesheet" type="text/css" href="../../public_html/css/default.css">
-	<script type="text/javascript" src="../../vendors/scripts/jquery.min.js"></script>
-	<script type="text/javascript" src="../../public_html/vendors/scripts/angular.min.js"></script>
+	<script type="text/javascript" src="../../vendor/scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="../../public_html/vendor/scripts/angular.min.js"></script>
 
 </head>
 <body>

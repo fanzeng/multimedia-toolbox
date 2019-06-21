@@ -202,8 +202,8 @@
 <head>
 	<title>Online Video Creator</title>
 	<link rel="stylesheet" type="text/css" href="../../public_html/css/default.css">
-	<script type="text/javascript" src="../../public_html/vendors/scripts/jquery.min.js"></script>
-	<script type="text/javascript" src="../../public_html/vendors/scripts/angular.min.js"></script>
+	<script type="text/javascript" src="../../public_html/vendor/scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="../../public_html/vendor/scripts/angular.min.js"></script>
 	<script type="text/javascript" src="scripts/videoCreator.js"></script>
     <script type="text/javascript" src="scripts/app.module.js"></script>
     <script type="text/javascript" src="scripts/frame-preview/frame-preview.module.js"></script>
