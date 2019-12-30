@@ -1,0 +1,42 @@
+(replace xxxx to be the desired port number)
+
+Example setup of the site on localhost:xxxx usinng Apache on Ubuntu
+
+
+1. add the following line to /etc/apache2/ports.conf
+
+    Listen localhost:xxxx
+
+2. create the file /etc/apache2/sites-available/multimedia_toolbox.conf 
+with the following content
+
+    <VirtualHost *:8201>
+            DocumentRoot /var/www/html/multimedia_toolbox
+            <Directory />
+                    Options FollowSymLinks
+                    AllowOverride None
+            </Directory>
+    </VirtualHost>
+
+
+3. create a symlink to the above file in /etc/apache2/sites-enabled
+using e.g. the following command in /etc/apache2/sites-enabled
+
+    sudo ln -s ../sites-available/multimedia_toolbox.conf multimedia_toolbox.conf
+
+4. create the symlink to the project src dir in /var/www/html
+using e.g. the following commands
+(replace "path/to/multimedia_toolbox" to where the multimedia_toolbox src directory is located)
+
+    cd /var/www/html/
+    sudo ln -s path/to/multimedia_toolbox multimedia_toolbox
+
+5. if php is not installed, install it using e.g.
+
+    sudo apt install php libapache2-mod-php
+
+6. restart the Apache server
+
+    sudo service apache2 restart
+
+7. visit the site at http://localhost:xxxx
