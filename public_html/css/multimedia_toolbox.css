@@ -1,0 +1,10 @@
+#docktop_bg {
+  height: 150px;
+  background: #eeeeee;
+}
+
+#docktop_fg {
+  height: 50px;
+  line-height: 20px;
+  text-align: center;
+}
