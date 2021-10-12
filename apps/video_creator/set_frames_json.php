@@ -15,7 +15,7 @@ session_start();
 	$json_obj = json_decode($post_string, true);
 	$_SESSION["array_frames"] = array();
 	foreach ($json_obj["array_frames"] as $frame) {
-		$f = new Frame($frame["order"], $frame["source_file_name"], $frame["number_of_frames"]);
+		$f = new Frame($frame["order"], $frame["srcFilename"], $frame["numRepetition"]);
 		array_push($_SESSION["array_frames"], $f);
 	}
     $_SESSION["source_image_num"] = count($_SESSION["array_frames"]);

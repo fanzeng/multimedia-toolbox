@@ -5,97 +5,93 @@ angular.
   component('framePreview', {
     templateUrl: 'scripts/frame-preview/frame-preview.template.html',
     controller: ['$http', '$scope', function framePreviewController($http, $scope) {
-      var self = this;
-      var is_selecting_start_frame = true;
-      var start_frame = - 1;
-      var end_frame = -1;
-      $http.get('get_frames_json.php').then(function(response) {
-        self.frames = response.data;
-        for (var i = 0; i < self.frames['array_frames'].length; i++) {
-          self.frames['array_frames'][i]['selected'] = String(self.frames['array_frames'][i]['selected']) == "true";
-        }
+      $http.get('get_frames_json.php').then(res => {
+        this.frames = res.data;
+        console.log('this.frames=', this.frames)
+        this.frames.arrFrames = this.frames['array_frames'];
+        console.log('this.frames.arrFrames = ', this.frames.arrFrames);
+        // for (let i = 0; i < this.frames.arrFrames.length; i++) {
+        //   this.frames.arrFrames[i].isSelected = this.frames.arrFrames[i].isSelected;
+        // }
       });
 
-      this.onclick_update_frames = function() {
-        self.frames['array_frames'].sort(function(a, b){return a.order-b.order;});
-
-        var count = 0;
-        var new_array_frames = []
-        for (var i = 0; i < self.frames['array_frames'].length; i++) {
-          var frame = self.frames['array_frames'][i];
+      this.updateFrames = function() {
+        this.frames.arrFrames.sort(function(a, b){return a.order-b.order;});
+        let count = 0;
+        let newArrFrames = []
+        for (let i = 0; i < this.frames.arrFrames.length; i++) {
+          let frame = this.frames.arrFrames[i];
           if (frame.order >= 0) {
             frame.order = count;
             count++;
-            new_array_frames.push(frame);
+            newArrFrames.push(frame);
           } else {
-            console.log("splice" + i);
+            console.log(`splice ${i}`);
           }
         }
-        self.frames['array_frames'] = new_array_frames;
-        var post_data = $.param(self.frames);
-        $http.post('set_frames_json.php', post_data, {
+        this.frames.arrFrames = newArrFrames;
+        $http.post('set_frames_json.php', $.param(this.frames), {
           url: 'set_frames_json.php',
-          method: "POST",
+          method: 'POST',
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(function(response) {
-          console.log(response.data);
-        }, function(response) {
-          console.log(response.data);
+        }).then(function(res) {
+          console.log(res.data);
+        }, function(res) {
+          console.log(res.data);
         });
         location.reload(); 
       };
 
-      this.onclick_img = function(frame) {
-        if (this.is_selecting_start_frame === true) {
-          this.start_frame = frame.order;
-          this.end_frame = this.start_frame + 1;
-          this.is_selecting_start_frame = false;
+      this.onclickImg = function(frame) {
+        if (this.isSelectingStartFrame) {
+          this.startFrame = frame.order;
+          this.endFrame = this.startFrame + 1;
         } else {
-          this.end_frame = frame.order + 1;
-          this.is_selecting_start_frame = true;
+          this.endFrame = frame.order + 1;
         }
-        for (var i = 0; i < this.frames['array_frames'].length; i++) {
-          if (i >= this.start_frame && i < this.end_frame) {
-            this.frames['array_frames'][i].selected = true;
+        this.isSelectingStartFrame = !this.isSelectingStartFrame;
+        for (let i = 0; i < this.frames.arrFrames.length; i++) {
+          if (i >= this.startFrame && i < this.endFrame) {
+            this.frames.arrFrames[i].selected = true;
           } else {
-            this.frames['array_frames'][i].selected = false;
+            this.frames.arrFrames[i].selected = false;
           }
         }
-        console.log("selected " + this.start_frame + " to " + this.end_frame);
+        console.log(`selected ${this.startFrame} to ${this.endFrame}`);
       }
 
-      $scope.ondragover_span_gap = function(ev) {
+      $scope.onDragOverSpanGap = function(ev) {
         ev.preventDefault();
       }
 
-      $scope.ondrop_span_gap = function(ev, insert_after_frame) {
+      $scope.onDropSpanGap = function(ev, insertAfterFrame) {
         ev.preventDefault();
-        var insert_after_position = insert_after_frame.order;
-        console.log("insert after " + insert_after_position);
+        let insertAfterPosition = insertAfterFrame.order;
+        console.log(`insert after ${insertAfterPosition}`);
         // count how many frames are selected in total
-        var selected_count = 0;
-        for (var i = 0; i < self.frames['array_frames'].length; i++) {
-          var frame = self.frames['array_frames'][i];
-          if (frame.selected === true) {
-            selected_count++;
+        let count = 0;
+        for (let i = 0; i < this.frames.arrFrames.length; i++) {
+          let frame = this.frames.arrFrames[i];
+          if (frame.selected) {
+            count++;
           }
         }
         // count how many frames are selected before the insertion point
-        var selected_before_insertion = 0;
-        for (var i = 0; i <= insert_after_position; i++) {
-          var frame = self.frames['array_frames'][i];
-          if (frame.selected === true) {
-            selected_before_insertion++;
+        let selectedBeforeInsertion = 0;
+        for (let i = 0; i <= insertAfterPosition; i++) {
+          let frame = this.frames.arrFrames[i];
+          if (frame.selected) {
+            selectedBeforeInsertion++;
           }
         }
-        insert_after_position -= selected_before_insertion;
-        var selected_order = insert_after_position + 1;
-        var unselected_order = 0;
-        for (var i = 0; i < self.frames['array_frames'].length; i++) {
-          if (unselected_order === insert_after_position + 1) {
+        insertAfterPosition -= selectedBeforeInsertion;
+        let selected_order = insertAfterPosition + 1;
+        let unselected_order = 0;
+        for (let i = 0; i < this.frames.arrFrames.length; i++) {
+          if (unselected_order === insertAfterPosition + 1) {
             unselected_order += selected_count;
           }
-          var frame = self.frames['array_frames'][i];
+          let frame = this.frames.arrFrames[i];
           if (frame.selected === true) {
             frame.order = selected_order;
             selected_order++;
@@ -104,20 +100,20 @@ angular.
             unselected_order++;
           }
         }
-        self.onclick_update_frames();
+        this.updateFrames();
       }
 
-      this.onkeyup_img = function(ev) {
+      this.onKeyupImg = function(ev) {
         console.log(ev.key);
-        if (ev.key === "Delete") {
-          for (var i = 0; i < self.frames['array_frames'].length; i++) {
-            var frame = self.frames['array_frames'][i];
-            if (frame.selected === true) {
-              console.log("deleting" + i);
+        if (ev.key === 'Delete') {
+          for (let i = 0; i < this.frames.arrFrames.length; i++) {
+            let frame = this.frames.arrFrames[i];
+            if (frame.selected) {
+              console.log(`deleting frame ${i}`);
               frame.order = -1;
             } 
           }
-          this.onclick_update_frames();
+          this.updateFrames();
         }
       }
     }
