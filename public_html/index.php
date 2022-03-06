@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Fan Zeng's multimedia toolbox. Welcome</title>
-  	<link rel="stylesheet" type="text/css" href="css/fanzeng.css">
+  	<link rel="stylesheet" type="text/css" href="https://fanzeng.github.io/fanzengau.com/public/css/fanzeng.css">
 	<link rel="stylesheet" type="text/css" href="css/multimedia_toolbox.css">
 </head>
 <body>
