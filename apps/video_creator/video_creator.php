@@ -200,7 +200,8 @@ function completeSessionDestroy()
 <html lang="en" ng-app="framePreviewApp">
 <head>
   <title>Online Video Creator</title>
-  <link rel="stylesheet" type="text/css" href="../../public_html/css/default.css">
+  <link rel="stylesheet" type="text/css" href="../../public_html/css/fanzeng.css">
+  <link rel="stylesheet" type="text/css" href="../../public_html/css/multimedia_toolbox.css">
   <script type="text/javascript" src="../../public_html/vendor/scripts/jquery.min.js"></script>
   <script type="text/javascript" src="../../public_html/vendor/scripts/angular.min.js"></script>
   <script type="text/javascript" src="scripts/videoCreator.js"></script>

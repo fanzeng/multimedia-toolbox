@@ -1,10 +1,58 @@
-#docktop_bg {
-  height: 150px;
+
+
+a:link {
+position: relative;
+opacity: 0.8;
+color: #0047bc;
+text-decoration: underline;
+font-size: 20px;
+}
+
+a:hover {
+opacity: 1;
+color: #0087dc;
+transform: scale(1.1);
+}
+
+a.menu_item {
+height: 40px;
+position: fixed;
+top: 60px;
+background-color: #0027ea;
+color: #eeeeee;
+}
+
+button {
+ background: #eeeeee;
+ opacity: 0.95;
+ color: #ff4a00;
+ padding: 3px;
+ border-radius: 0px;
+}
+
+button:hover {
+opacity: 1;
+transform: scale(1.1);
+}
+
+.docktop_bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0px;
+  z-index: 990;
+  height: 100px;
   background: #eeeeee;
 }
 
-#docktop_fg {
-  height: 50px;
-  line-height: 20px;
-  text-align: center;
+.docktop_fg {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 999;
+height: 50px;
+line-height: 20px;
+text-align: center;
 }

@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Fan Zeng's multimedia toolbox. Welcome</title>
-  	<link rel="stylesheet" type="text/css" href="./css/default.css">
+  	<link rel="stylesheet" type="text/css" href="css/fanzeng.css">
 	<link rel="stylesheet" type="text/css" href="css/multimedia_toolbox.css">
-
 </head>
 <body>
 <div class="docktop_bg" id="docktop_bg">
@@ -17,8 +16,7 @@
 		</p>
 	</div>
 </div>
-<br><br><br><br><br><br><br><br>
-
+<div style="height: 100px"></div>
 
 <div class="column_uneven_8_2_left">
 	<h1>Online video creator</h1>
