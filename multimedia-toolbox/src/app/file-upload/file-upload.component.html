@@ -1,0 +1,13 @@
+
+<form id="form-upload-files" action="#" method="post" enctype="multipart/form-data">
+  <input type="file" name="filesToUpload[]" multiple="multiple" onmousedown="onBrowseBtnClick()" value="files-to-upload" id="files-to-upload">
+  <label for="files-to-upload">Select image files to upload.</label><br>
+  <input id="num-repetition" name="numRepetition" value="1">
+  <label for="num-repetition">Specify number of frames in the output video each uploaded image is displayed.</label><br>
+  <input id="start-frame-number" name="startFrameNumber" value="0">
+  <label for="start-frame-number">Specify the start frame number to insert the new frames.</label><br>
+  <input type="submit" value="Upload Images" name="uploadImages">
+  <p>Message: <span id="upload-images-message"></span></p>
+  <p>If a dialogue pops-up asking whether to submit again, cancel and manually hit enter in the address bar. The existing frame number should then be updated.</p>
+</form>
+<br><br>
