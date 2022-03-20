@@ -9,6 +9,13 @@ if ($documentRoot === '/var/www/html/multimedia_toolbox/') { // If this is on lo
     $isLocalHost = true;
 }
 
+// CORS allow from any origin
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 86400');    // cache for 1 day
+}
+
 $userDataPath = '../../data/user_data';
 if (!isset($_SESSION['isSessionInitialised'])) {
 
@@ -195,60 +202,3 @@ function completeSessionDestroy()
     header('Refresh:1');
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en" ng-app="framePreviewApp">
-<head>
-  <title>Online Video Creator</title>
-  <link rel="stylesheet" type="text/css" href="../../public_html/css/fanzeng.css">
-  <link rel="stylesheet" type="text/css" href="../../public_html/css/multimedia_toolbox.css">
-  <script type="text/javascript" src="../../public_html/vendor/scripts/jquery.min.js"></script>
-  <script type="text/javascript" src="../../public_html/vendor/scripts/angular.min.js"></script>
-  <script type="text/javascript" src="scripts/videoCreator.js"></script>
-  <script type="text/javascript" src="scripts/app.module.js"></script>
-  <script type="text/javascript" src="scripts/frame-preview/frame-preview.module.js"></script>
-  <script type="text/javascript" src="scripts/frame-preview/frame-preview.component.js"></script>
-</head>
-<body>
-  <br>Disclaimer: Your images will be deleted after use. But keep in mind this is on external web hosting. Please use with discretions. <br><br>
-  <h2>Step 1: Upload key frames in order (must be image files with same extension):</h2><br>
-  <form id="form-upload-files" action="#" method="post" enctype="multipart/form-data">
-    <input type="file" name="filesToUpload[]" multiple="multiple" onmousedown="onBrowseBtnClick()" value="files-to-upload" id="files-to-upload">
-    <label for="files-to-upload">Select image files to upload.</label><br>
-    <input id="num-repetition" name="numRepetition" value="1">
-    <label for="num-repetition">Specify number of frames in the output video each uploaded image is displayed.</label><br>
-    <input id="start-frame-number" name="startFrameNumber" value="0">
-    <label for="start-frame-number">Specify the start frame number to insert the new frames.</label><br>
-    <input type="submit" value="Upload Images" name="uploadImages">
-    <p>Message: <span id="upload-images-message"></p>
-    <p>If a dialogue pops-up asking whether to submit again, cancel and manually hit enter in the address bar. The existing frame number should then be updated.</p>
-  </form>
-  <br><br>
-
-  <frame-preview></frame-preview>
-
-  <h2>Step 2: Specify video parameters:</h2><br>
-  <form action="#" method="post" enctype="multipart/form-data">
-    <label for="video-width">Video width</label><br>
-    <input id="video-width" name="videoWidth" value="640"><br>
-    <label for="video-height">Video height</label><br>
-    <input id="video-height" name="videoHeight" value="480"><br>
-    <label for="frames-per-second">Frames per second</label><br>
-    <input id="frames-per-second" name="framesPerSecond" value="24"><br>
-    <label for="quality-ratio">Quality ratio (0: Best, 51: Worst)</label><br>
-    <input id="quality-ratio" name="qualityRatio" value="23"><br>
-    <input type="submit" value="Make Video" name="makeVideo"><br>
-  </form>
-  <br><br>
-  <form action="#" method="post" enctype="multipart/form-data">
-  <input type="submit" value="Start Over" name="startOver">
-  Pressing this button will delete all previous uploaded images.<br>
-  <!--
-    <form action="#" method="post" enctype="multipart/form-data">
-    <input type="submit" value="Delete All User Data" name="deleteAllUserData">
-    </form>
-  -->
-  </form>
-  <!-- <a href="index.php">Back to index</a> -->
-</body>
-</html>

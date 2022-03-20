@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-file-upload',
@@ -6,69 +7,59 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./file-upload.component.css']
 })
 export class FileUploadComponent implements OnInit {
-  BATCH_SIZE = 1;
+  BATCH_SIZE: number = 20;
   allFileList: Array<any>;
-  constructor() {
+  startFrameNumber: number = 0;
+  numRepetition: number = 1;
+  constructor(private http: HttpClient) {
     this.allFileList = Array();
   }
 
-  ngOnInit(): void {
-    // let fileInput = $('#files-to-upload')[0];
-    // fileInput.addEventListener('change', () => {
-    //   let fileList = Array();
-    //   let numberAddedFiles = 0;
-    //   for (let i = 0; i < fileInput.files.length; i++) {
-    //     fileList.push(fileInput.files[i]);
-    //     numberAddedFiles++;
-    //     if (numberAddedFiles >= BATCH_SIZE) {
-    //       allFileList.push(fileList);
-    //       fileList = [];
-    //       numberAddedFiles = 0;
-    //     }
-    //   }
-    //   if (numberAddedFiles > 0) {
-    //     allFileList.push(fileList);
-    //   }
-    // });
-  }
-
+  ngOnInit(): void { }
 
   sendFileList(allFileList:Array<any>, i: number): void {
     let fileList = allFileList[i];
-    // fileInput.files = new FileListItem(fileList.reverse());
-    function FileListItem(a: any) {
-      a = [].slice.call(Array.isArray(a) ? a : arguments);
-      for (var c, b = c = a.length, d = !0; b-- && d;) d = a[b] instanceof File;
-      if (!d) throw new TypeError('expected argument to FileList is File or array of File objects');
-      for (b = (new ClipboardEvent('')).clipboardData || new DataTransfer; c--;) b.items.add(a[c]);
-      return b.files;
+    const formData: FormData = new FormData();
+    for(let j = 0; j < fileList.length; j++) {
+      const file = fileList[j];
+      formData.append('filesToUpload[]', file, file.name);
+
     }
-    // let formData = new FormData(fileCatcher);
-    let request = new XMLHttpRequest();
-    request.onreadystatechange = function () {
-      if (this.readyState === 4 && this.status === 200) {
-        i++;
-        // if (i < allFileList.length) {
-        //   sendFileList(allFileList, i);
-        // } else {
-        //   $('#upload-images-message').html('Finished.');
-        //   window.location.reload(false);
-        // }
-      }
+    formData.append('numRepetition', this.numRepetition.toString());
+    const url = 'http://localhost:8201/apps/video_creator/video_creator.php';
+    const httpOptions = {
+      // headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    // $('#upload-images-message').html('Uploading batch ' + String(i + 1) + '/' + String(allFileList.length) + ' of ' + String(fileList.length) + ' images, please wait.');
-    // request.open('POST', 'video_creator.php', false);
-    // request.send(formData);
+    this.http.post(url, formData, httpOptions).subscribe(result => console.log(result))
+    i++;
+    if (i < allFileList.length) {
+      this.sendFileList(allFileList, i);
+    }
+    else {
+      console.log('Finished.')
+    }
   }
 
-  // function onBrowseBtnClick(): void {
-    // let fileCatcher = $('#form-upload-files')[0];
-    // console.log('fileCatcher=', fileCatcher)
-    // let fileInput = $('#files-to-upload')[0];
-    // fileCatcher.addEventListener('submit', function (event) {
-    //   event.preventDefault();
-    //   sendFileList(window.allFileList, 0);
-    // });
-  // }
+  onBrowseBtnClick(event: any): void {
+    const fileListInput = event.target.files;
+    let fileList = Array();
+    let numberAddedFiles = 0;
+    for (let i = 0; i < fileListInput.length; i++) {
+      fileList.push(fileListInput[i]);
+      numberAddedFiles++;
+      if (numberAddedFiles >= this.BATCH_SIZE) {
+        this.allFileList.push(fileList);
+        fileList = [];
+        numberAddedFiles = 0;
+      }
+    }
+    if (numberAddedFiles > 0) {
+      this.allFileList.push(fileList);
+    }
+  }
   
+  onSubmitBtnClick(event: any): void {
+    this.sendFileList(this.allFileList, 0);
+    this.allFileList = [];
+  }
 }

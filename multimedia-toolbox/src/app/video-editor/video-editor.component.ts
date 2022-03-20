@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Frame } from './frame';
 import { Frames } from './frames';
@@ -12,9 +13,12 @@ export class VideoEditorComponent implements OnInit {
   startFrame!: number;
   endFrame!: number;
   isSelectingStartFrame: boolean = true;
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
+    this.http.get('http://localhost:8201/apps/video_creator/get_frames_json.php').subscribe(result => {
+      console.log('frames_json=', result)
+    })
   }
 
   getFrameSrcFilename(index: number, frame: Frame): string {

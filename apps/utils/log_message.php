@@ -17,7 +17,7 @@ function log_message($path, $msg, $postfix) {
     }
     if (!file_exists($log_file_name)) {
         fclose(fopen($log_file_name, "w"));
-        chmod($log_file_name, 0740);
+        chmod($log_file_name, 0770);
     }
     $file_handle = fopen($log_file_name, "a");
     $file_contents = date_format($date, 'r') . ': ' . $msg . "\n";
