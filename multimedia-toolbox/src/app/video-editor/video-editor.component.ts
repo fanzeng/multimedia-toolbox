@@ -1,55 +1,112 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Frame } from './frame';
-import { Frames } from './frames';
-
+import { VideoRecipe } from './video-recipe';
+import { Subscription, Observable } from 'rxjs';
 @Component({
-  selector: 'app-video-editor',
+  selector: 'multimedia-toolbox-video-editor',
   templateUrl: './video-editor.component.html',
   styleUrls: ['./video-editor.component.css']
 })
 export class VideoEditorComponent implements OnInit {
-  frames!: Frames;
+  videoRecipe!: VideoRecipe;
   startFrame!: number;
   endFrame!: number;
   isSelectingStartFrame: boolean = true;
-  constructor(private http: HttpClient) { }
 
+  private eventsSubscription!: Subscription;
+
+  @Input() events!: Observable<void>;
+  @Output() videoRecipeCreated = new EventEmitter<VideoRecipe>();
+
+  constructor(private http: HttpClient) { }
   ngOnInit(): void {
-    this.http.get('http://localhost:8201/apps/video_creator/get_frames_json.php').subscribe(result => {
-      console.log('frames_json=', result)
-    })
+
+    console.log(localStorage.getItem('videoRecipeId'));
+    if (!localStorage.getItem('videoRecipeId')) {
+      this.createVideoRecipe();
+    }
+    else {
+      const videoRecipeId = localStorage.getItem('videoRecipeId');
+      this.reload(videoRecipeId);
+    }
+    this.eventsSubscription = this.events.subscribe(() => this.createVideoRecipe());
+  }
+  
+  createVideoRecipe() {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'text/plain' })
+    };
+    const formData: FormData = new FormData();
+    this.http.post('http://localhost:8000/video-recipes', formData, httpOptions).subscribe((resp: any) => {
+      console.log(resp);
+      this.videoRecipe = {
+        id: resp.id,
+        frames: []
+      };
+      console.log('this.videoRecipe', this.videoRecipe);
+      localStorage.setItem('videoRecipeId', this.videoRecipe.id.toString());
+      this.onVideoRecipeCreated();
+    });
+  }
+  
+  onVideoRecipeCreated() {
+    console.log('this.videoRe', this.videoRecipe)
+    this.videoRecipeCreated.emit(this.videoRecipe);
   }
 
   getFrameSrcFilename(index: number, frame: Frame): string {
     return frame.srcFilename;
   }
 
+  reload(videoRecipeId: any): any {
+    console.log('reloading');
+
+    this.http.get(`http://localhost:8000/video-recipes/${videoRecipeId}`,  { withCredentials: true }).subscribe((resp: any) => {
+      console.log('resp', resp);
+      console.log('resp[0].frames', resp[0].frames);
+      this.videoRecipe = resp[0];
+      this.videoRecipe.frames = resp[0].frames.map((frame: any): Frame => ({
+        id: frame.id,
+        order: frame.order,
+        selected: false,
+        numRepetition: frame.num_repetition,
+        srcFilename: `http://localhost:8000/${frame.src_filename}`
+      }));
+      console.log(this.videoRecipe.frames)
+      this.videoRecipeCreated.emit(this.videoRecipe);
+    })
+  }
+
   updateFrames(): void {
-    this.frames.arrFrames.sort(function(a, b){return a.order-b.order;});
+    console.log('this.videoRecipe=', this.videoRecipe)
+    this.videoRecipe.frames.sort((a, b) => a.order - b.order);
     let count = 0;
-    let newArrFrames = [];
-    for (let i = 0; i < this.frames.arrFrames.length; i++) {
-      let frame = this.frames.arrFrames[i];
+    let newFrames = [];
+    for (let i = 0; i < this.videoRecipe.frames.length; i++) {
+      let frame = this.videoRecipe.frames[i];
+      console.log('frame=', frame)
       if (frame.order >= 0) {
         frame.order = count;
         count++;
-        newArrFrames.push(frame);
+        newFrames.push(frame);
       } else {
         console.log(`splice ${i}`);
       }
     }
-    this.frames.arrFrames = newArrFrames;
-    // $http.post('set_frames_json.php', $.param(this.frames), {
-    //   url: 'set_frames_json.php',
-    //   method: 'POST',
-    //   headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    // }).then(function(res) {
-    //   console.log(res.data);
-    // }, function(res) {
-    //   console.log(res.data);
-    // });
-    // location.reload(); 
+    console.log('newFrames=', newFrames)
+
+    this.videoRecipe.frames = newFrames;
+    console.log(this.videoRecipe)
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+    this.http.put(`http://localhost:8000/video-recipes/${this.videoRecipe.id}`, JSON.stringify(this.videoRecipe), httpOptions).subscribe((resp: any) => {
+      // this.videoRecipe = resp;
+      console.log('res=', resp)
+      console.log('this.videoRecipe=', this.videoRecipe);
+      this.reload(this.videoRecipe.id);
+    })
   };
 
   onclickImg(frame: any): void {
@@ -60,11 +117,11 @@ export class VideoEditorComponent implements OnInit {
       this.endFrame = frame.order + 1;
     }
     this.isSelectingStartFrame = !this.isSelectingStartFrame;
-    for (let i = 0; i < this.frames.arrFrames.length; i++) {
+    for (let i = 0; i < this.videoRecipe.frames.length; i++) {
       if (i >= this.startFrame && i < this.endFrame) {
-        this.frames.arrFrames[i].selected = true;
+        this.videoRecipe.frames[i].selected = true;
       } else {
-        this.frames.arrFrames[i].selected = false;
+        this.videoRecipe.frames[i].selected = false;
       }
     }
     console.log(`selected ${this.startFrame} to ${this.endFrame}`);
@@ -80,8 +137,8 @@ export class VideoEditorComponent implements OnInit {
     console.log(`insert after ${insertAfterPosition}`);
     // count how many frames are selected in total
     let count = 0;
-    for (let i = 0; i < this.frames.arrFrames.length; i++) {
-      let frame = this.frames.arrFrames[i];
+    for (let i = 0; i < this.videoRecipe.frames.length; i++) {
+      let frame = this.videoRecipe.frames[i];
       if (frame.selected) {
         count++;
       }
@@ -89,7 +146,7 @@ export class VideoEditorComponent implements OnInit {
     // count how many frames are selected before the insertion point
     let selectedBeforeInsertion = 0;
     for (let i = 0; i <= insertAfterPosition; i++) {
-      let frame = this.frames.arrFrames[i];
+      let frame = this.videoRecipe.frames[i];
       if (frame.selected) {
         selectedBeforeInsertion++;
       }
@@ -97,11 +154,11 @@ export class VideoEditorComponent implements OnInit {
     insertAfterPosition -= selectedBeforeInsertion;
     let selected_order = insertAfterPosition + 1;
     let unselected_order = 0;
-    for (let i = 0; i < this.frames.arrFrames.length; i++) {
+    for (let i = 0; i < this.videoRecipe.frames.length; i++) {
       if (unselected_order === insertAfterPosition + 1) {
         unselected_order += count;
       }
-      let frame = this.frames.arrFrames[i];
+      let frame = this.videoRecipe.frames[i];
       if (frame.selected) {
         frame.order = selected_order;
         selected_order++;
@@ -116,8 +173,8 @@ export class VideoEditorComponent implements OnInit {
   onKeyupImg(ev: any): void {
     console.log(ev.key);
     if (ev.key === 'Delete') {
-      for (let i = 0; i < this.frames.arrFrames.length; i++) {
-        let frame = this.frames.arrFrames[i];
+      for (let i = 0; i < this.videoRecipe.frames.length; i++) {
+        let frame = this.videoRecipe.frames[i];
         if (frame.selected) {
           console.log(`deleting frame ${i}`);
           frame.order = -1;
@@ -126,6 +183,8 @@ export class VideoEditorComponent implements OnInit {
       this.updateFrames();
     }
   }
-
+  ngOnDestroy() {
+    this.eventsSubscription.unsubscribe();
+  }
 
 }

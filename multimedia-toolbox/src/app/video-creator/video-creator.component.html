@@ -13,24 +13,25 @@
   <br>Disclaimer: Your images will be deleted after use. But keep in mind this is on external web hosting. Please use with discretions. <br><br>
   <h2>Step 1: Upload key frames in order (must be image files with same extension):</h2><br>
   
-  <app-file-upload></app-file-upload>
-  <app-video-editor></app-video-editor>
+  <multimedia-toolbox-file-upload [videoRecipeId]="videoRecipeId" (fileUploadSuccess)="onFileUploadSuccess($event, videoEditor)"></multimedia-toolbox-file-upload>
+  <multimedia-toolbox-video-editor (videoRecipeCreated)="onVideoRecipeCreated($event)" #videoEditor [events]="eventsSubject.asObservable()"></multimedia-toolbox-video-editor>
 
   <h2>Step 2: Specify video parameters:</h2><br>
   <form action="#" method="post" enctype="multipart/form-data">
     <label for="video-width">Video width</label><br>
-    <input id="video-width" name="videoWidth" value="640"><br>
+    <input id="video-width" name="videoWidth" [(ngModel)]="videoWidth"><br>
     <label for="video-height">Video height</label><br>
-    <input id="video-height" name="videoHeight" value="480"><br>
+    <input id="video-height" name="videoHeight" [(ngModel)]="videoHeight"><br>
     <label for="frames-per-second">Frames per second</label><br>
-    <input id="frames-per-second" name="framesPerSecond" value="24"><br>
+    <input id="frames-per-second" name="framesPerSecond"[(ngModel)]="framesPerSecond"><br>
     <label for="quality-ratio">Quality ratio (0: Best, 51: Worst)</label><br>
-    <input id="quality-ratio" name="qualityRatio" value="23"><br>
-    <input type="submit" value="Make Video" name="makeVideo"><br>
+    <input id="quality-ratio" name="qualityRatio" [(ngModel)]="qualityRatio"><br>
+    <input type="submit" action="#" (click)="makeVideo()"><br>
+    <h1 *ngIf="generatedVideoLink.length > 0">Download the video here (right click, save as): <a [href]="generatedVideoLink">output.mp4</a></h1><br>
   </form>
   <br><br>
   <form action="#" method="post" enctype="multipart/form-data">
-  <input type="submit" value="Start Over" name="startOver">
+  <input type="submit" value="Start Over" name="startOver" (click)="startOver();">
   Pressing this button will delete all previous uploaded images.<br>
   <!--
     <form action="#" method="post" enctype="multipart/form-data">

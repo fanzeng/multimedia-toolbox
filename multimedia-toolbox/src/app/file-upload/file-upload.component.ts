@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
-  selector: 'app-file-upload',
+  selector: 'multimedia-toolbox-file-upload',
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.css']
 })
@@ -11,11 +11,17 @@ export class FileUploadComponent implements OnInit {
   allFileList: Array<any>;
   startFrameNumber: number = 0;
   numRepetition: number = 1;
+  @Input() videoRecipeId = 0;
+  @Output() fileUploadSuccess = new EventEmitter<void>();
+
+  
   constructor(private http: HttpClient) {
     this.allFileList = Array();
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log('videoRecipeId =', this.videoRecipeId);
+  }
 
   sendFileList(allFileList:Array<any>, i: number): void {
     let fileList = allFileList[i];
@@ -23,21 +29,31 @@ export class FileUploadComponent implements OnInit {
     for(let j = 0; j < fileList.length; j++) {
       const file = fileList[j];
       formData.append('filesToUpload[]', file, file.name);
-
     }
+    formData.append('videoRecipeId', this.videoRecipeId.toString());
     formData.append('numRepetition', this.numRepetition.toString());
-    const url = 'http://localhost:8201/apps/video_creator/video_creator.php';
+    formData.append('order', this.startFrameNumber.toString());
+
+    // const url = 'http://localhost:8201/apps/video_creator/video_creator.php';
+    const url = 'http://localhost:8000/frames/';
+    console.log('videoRecipeId =', this.videoRecipeId);
+
+
     const httpOptions = {
       // headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    this.http.post(url, formData, httpOptions).subscribe(result => console.log(result))
-    i++;
-    if (i < allFileList.length) {
-      this.sendFileList(allFileList, i);
-    }
-    else {
-      console.log('Finished.')
-    }
+    this.http.post(url, formData, httpOptions).subscribe(result => {
+      console.log(result);
+      i++;
+      if (i < allFileList.length) {
+        this.sendFileList(allFileList, i);
+      }
+      else {
+        console.log('Finished.');
+        this.fileUploadSuccess.emit();
+      }
+    })
+    
   }
 
   onBrowseBtnClick(event: any): void {
