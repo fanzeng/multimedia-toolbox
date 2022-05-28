@@ -1,0 +1,58 @@
+{
+    "userId": "626bd795e92a0",
+    "isSessionInitialised": 0,
+    "sourceImageId": 6,
+    "arrSourceFilenames": [
+        "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_0.jpg",
+        "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_1.jpg",
+        "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_2.jpg",
+        "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_3.png",
+        "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_4.jpg",
+        "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_5.jpg",
+        "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_6.jpg"
+    ],
+    "arrFrames": [
+        {
+            "order": 0,
+            "srcFilename": "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_0.jpg",
+            "numRepetition": 1,
+            "selected": true
+        },
+        {
+            "order": 1,
+            "srcFilename": "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_1.jpg",
+            "numRepetition": 1,
+            "selected": true
+        },
+        {
+            "order": 2,
+            "srcFilename": "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_2.jpg",
+            "numRepetition": 1,
+            "selected": true
+        },
+        {
+            "order": 3,
+            "srcFilename": "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_3.png",
+            "numRepetition": 1,
+            "selected": true
+        },
+        {
+            "order": 4,
+            "srcFilename": "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_4.jpg",
+            "numRepetition": 1,
+            "selected": true
+        },
+        {
+            "order": 5,
+            "srcFilename": "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_5.jpg",
+            "numRepetition": 1,
+            "selected": true
+        },
+        {
+            "order": 6,
+            "srcFilename": "..\/..\/data\/user_data\/626bd795e92a0\/source_images\/source_image_6.jpg",
+            "numRepetition": 1,
+            "selected": true
+        }
+    ]
+}
