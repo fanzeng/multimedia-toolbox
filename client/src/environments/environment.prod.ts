@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  remoteHost: 'http://fanzengau.c1.biz'
 };

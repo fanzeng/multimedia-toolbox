@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { VideoRecipe } from '../video-editor/video-recipe';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-video-creator',
   templateUrl: './video-creator.component.html',
@@ -16,6 +18,7 @@ export class VideoCreatorComponent implements OnInit {
   framesPerSecond: number = 24;
   qualityRatio: number = 23;
   eventsSubject: Subject<void> = new Subject<void>();
+  remoteHost:string = environment.remoteHost;
 
   constructor(private http: HttpClient) { }
 
@@ -39,9 +42,10 @@ export class VideoCreatorComponent implements OnInit {
       framesPerSecond: this.framesPerSecond,
       qualityRatio: this.qualityRatio
     };
-    this.http.post('http://localhost:8000/video-recipes/run', body, httpOptions).subscribe((resp: any) => {
+    const host = 'http://localhost:8000';
+    this.http.post(`${this.remoteHost}/video-recipes/run`, body, httpOptions).subscribe((resp: any) => {
       console.log('resp=', resp);
-      this.generatedVideoLink = `http://localhost:8000/${resp}`;
+      this.generatedVideoLink = `${this.remoteHost}/${resp}`;
     });
   }
   startOver() {

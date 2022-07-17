@@ -63,6 +63,7 @@ class FrameController extends Controller
             error_log('ext' . $ext);
 
             $srcFilename = "$userDataPath/" . $userId . '/source_images/source_image_' . (string)$sourceImageId . '.' . $ext;
+            $srcFilenameNoExt = "$userDataPath/" . $userId . '/source_images/source_image_' . (string)$sourceImageId;
             
             error_log('$srcFilename=' . $srcFilename);
             if (!file_exists("$userDataPath/" . $userId . '/source_images/')) {
@@ -73,12 +74,13 @@ class FrameController extends Controller
                 error_log("Failed to upload the file.");
             } else {
                 error_log("Successfully uploaded the file.");
+                copy($srcFilename, $srcFilenameNoExt);
                 $successCount++;
                 $sourceImageId++;
                 $frame = new Frame();
                 $frame->user_id = $userId;
                 $frame->order = $order;
-                $frame->src_filename = $srcFilename;
+                $frame->src_filename = $srcFilenameNoExt;
                 $frame->num_repetition = $numRepetition;
                 $frame->video_recipe_id = $videoRecipeId;
                 $order++;

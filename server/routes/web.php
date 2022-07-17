@@ -10,12 +10,16 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+$allowedOrigins = ['https://epicbeaver.netlify.app', 'http://localhost:4200'];
+$origin = $_SERVER['HTTP_ORIGIN'];
 
+if (in_array($origin, $allowedOrigins)) {
 
-header('Access-Control-Allow-Origin: http://localhost:4200');
+header('Access-Control-Allow-Origin:'. $origin);
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
 header('Access-Control-Allow-Credentials: true');
+}
 
 
 Route::get('/', function () {

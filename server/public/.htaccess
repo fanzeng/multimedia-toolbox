@@ -2,7 +2,16 @@
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
-
+    <IfModule mod_headers.c>
+        Header set Access-Control-Allow-Origin *
+    </IfModule>
+    Header set Access-Control-Allow-Origin *
+    
+    <DirectoryMatch "^/data/.*$">
+        Options Indexes FollowSymLinks Includes ExecCGI
+        Allow from all
+        Require all granted
+    </DirectoryMatch>
     RewriteEngine On
 
     # Handle Authorization Header
