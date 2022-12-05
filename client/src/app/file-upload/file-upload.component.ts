@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'multimedia-toolbox-file-upload',
@@ -11,6 +12,8 @@ export class FileUploadComponent implements OnInit {
   allFileList: Array<any>;
   startFrameNumber: number = 0;
   numRepetition: number = 1;
+  remoteHost:string = environment.remoteHost;
+  
   @Input() videoRecipeId = 0;
   @Output() fileUploadSuccess = new EventEmitter<void>();
 
@@ -35,7 +38,7 @@ export class FileUploadComponent implements OnInit {
     formData.append('order', this.startFrameNumber.toString());
 
     // const url = 'http://localhost:8201/apps/video_creator/video_creator.php';
-    const url = 'http://localhost:8000/frames/';
+    const url = `${this.remoteHost}/frames`;
     console.log('videoRecipeId =', this.videoRecipeId);
 
 

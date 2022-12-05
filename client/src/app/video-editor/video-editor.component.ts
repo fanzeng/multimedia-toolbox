@@ -3,6 +3,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Frame } from './frame';
 import { VideoRecipe } from './video-recipe';
 import { Subscription, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'multimedia-toolbox-video-editor',
   templateUrl: './video-editor.component.html',
@@ -13,6 +15,7 @@ export class VideoEditorComponent implements OnInit {
   startFrame!: number;
   endFrame!: number;
   isSelectingStartFrame: boolean = true;
+  remoteHost:string = environment.remoteHost;
 
   private eventsSubscription!: Subscription;
 
@@ -38,7 +41,7 @@ export class VideoEditorComponent implements OnInit {
       headers: new HttpHeaders({ 'Content-Type': 'text/plain' })
     };
     const formData: FormData = new FormData();
-    this.http.post('http://localhost:8000/video-recipes', formData, httpOptions).subscribe((resp: any) => {
+    this.http.post(`${this.remoteHost}/video-recipes`, formData, httpOptions).subscribe((resp: any) => {
       console.log(resp);
       this.videoRecipe = {
         id: resp.id,
@@ -62,7 +65,7 @@ export class VideoEditorComponent implements OnInit {
   reload(videoRecipeId: any): any {
     console.log('reloading');
 
-    this.http.get(`http://localhost:8000/video-recipes/${videoRecipeId}`,  { withCredentials: true }).subscribe((resp: any) => {
+    this.http.get(`${this.remoteHost}/video-recipes/${videoRecipeId}`,  { withCredentials: true }).subscribe((resp: any) => {
       console.log('resp', resp);
       console.log('resp[0].frames', resp[0].frames);
       this.videoRecipe = resp[0];
@@ -71,7 +74,7 @@ export class VideoEditorComponent implements OnInit {
         order: frame.order,
         selected: false,
         numRepetition: frame.num_repetition,
-        srcFilename: `http://localhost:8000/${frame.src_filename}`
+        srcFilename: `${this.remoteHost}/${frame.src_filename}`
       }));
       console.log(this.videoRecipe.frames)
       this.videoRecipeCreated.emit(this.videoRecipe);
@@ -101,7 +104,7 @@ export class VideoEditorComponent implements OnInit {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    this.http.put(`http://localhost:8000/video-recipes/${this.videoRecipe.id}`, JSON.stringify(this.videoRecipe), httpOptions).subscribe((resp: any) => {
+    this.http.put(`${this.remoteHost}/video-recipes/${this.videoRecipe.id}`, JSON.stringify(this.videoRecipe), httpOptions).subscribe((resp: any) => {
       // this.videoRecipe = resp;
       console.log('res=', resp)
       console.log('this.videoRecipe=', this.videoRecipe);
