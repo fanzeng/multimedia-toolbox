@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-$allowedOrigins = ['https://epicbeaver.netlify.app', 'http://localhost:4200'];
+$allowedOrigins = ['http://localhost:4200', 'https://epicbeaver.netlify.app', 'https://fanzengau.com',];
 $origin = $_SERVER['HTTP_ORIGIN'];
 
 if (in_array($origin, $allowedOrigins)) {
