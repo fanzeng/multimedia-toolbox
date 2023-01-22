@@ -1,6 +1,9 @@
-# install angular
+# Install angular
 Running `npm i` to install required packages, angular should be installed during this process. If not, then run
 `npm i @angular/cli@13.3.0`
+
+# Run angular
+npx ng serve
 
 # MultimediaToolbox
 
