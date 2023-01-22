@@ -4,10 +4,7 @@
 /public/data/user_data
 /storage/*.key
 /vendor
-artisan
 /bin/composer
-.env
-.env.backup
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml

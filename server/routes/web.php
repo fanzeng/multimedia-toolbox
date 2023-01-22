@@ -11,7 +11,7 @@
 |
 */
 $allowedOrigins = ['http://localhost:4200', 'https://epicbeaver.netlify.app', 'https://fanzengau.com'];
-$origin = $_SERVER['HTTP_ORIGIN'];
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
 
 if (in_array($origin, $allowedOrigins)) {
 
