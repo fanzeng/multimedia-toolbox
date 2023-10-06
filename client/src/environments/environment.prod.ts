@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  remoteHost: 'http://fanzengau.c1.biz'
+  remoteHost: 'https://multimedia-toolbox-server.onrender.com'
 };

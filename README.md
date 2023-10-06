@@ -15,10 +15,18 @@ sudo apt-get install filezilla
 # install php sqlite driver
 sudo apt-get install php-sqlite3
 
-# Start server
+# start server
 cd server
 php artisan serve
 
-# Start client
+# start client
 cd client
 npx ng serve
+npx ng serve --prod
+
+# build server docker image
+cd server
+docker build -t multimedia-toolbox-server .
+
+# test server docker image
+docker run -it -p 8000:8000 multimedia-toolbox-server
